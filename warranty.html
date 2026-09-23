@@ -13,35 +13,80 @@
 
 <body class="catalog-page projects-page">
 
-    <header class="header">
-        <div class="container header__inner">
-
-            <a href="index.html" class="logo">
-                <img src="images/logo.png"
-                    alt="ART HOMEY — студия индивидуальной мебели">
-            </a>
-
-            <nav class="nav" id="nav">
-                <a href="projects.html">Проекты</a>
-                <a href="process.html">Этапы</a>
-                <a href="about.html">О нас</a>
-                <a href="index.html#order" class="nav__cta">
-                    Консультация
-                </a>
-            </nav>
-
-            <a class="header__phone" href="tel:+79060561819">
-                +7 906 056-18-19
-            </a>
-
-            <button class="burger" id="burgerBtn" aria-label="Открыть меню">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-
-        </div>
-    </header>
+    <header class="header hp-header" id="siteHeader">
+                <div class="container hp-header__inner">
+            
+                    <div class="hp-header__contacts">
+                        <a href="https://t.me/arthomey" target="_blank" rel="noopener noreferrer" class="hp-header__icon"
+                            aria-label="Написать в Telegram">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+                                <path d="M21 3 3 10.5l6.2 2.1L11 19l3-4.4 4.9 3.6L21 3Z" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linejoin="round" stroke-linecap="round" />
+                                <path d="M9.2 12.6 17 7.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                            </svg>
+                        </a>
+                        <a href="https://wa.me/79060561819" target="_blank" rel="noopener noreferrer" class="hp-header__icon"
+                            aria-label="Написать в WhatsApp">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true">
+                                <path d="M12 3a9 9 0 0 0-7.75 13.5L3 21l4.7-1.2A9 9 0 1 0 12 3Z" stroke="currentColor"
+                                    stroke-width="1.6" stroke-linejoin="round" />
+                                <path
+                                    d="M8.7 8.6c.2-.5.5-.5.8-.5h.5c.2 0 .4 0 .6.4l.7 1.6c.1.3 0 .5-.1.7l-.4.5c-.2.2-.2.4-.1.6.4.7 1.4 1.7 2.1 2.1.2.1.4.1.6-.1l.5-.4c.2-.2.4-.2.7-.1l1.6.7c.4.2.4.4.4.6v.5c0 .3 0 .6-.5.8-.6.3-1.5.4-2.4.1-1.8-.6-3.7-2.5-4.3-4.3-.3-.9-.2-1.8.1-2.4Z"
+                                    fill="currentColor" />
+                            </svg>
+                        </a>
+                        <a href="https://max.ru/u/f9LHodD0cOIM9zp4Ho-Bn4nSWSp5nrVu4DwpDjRow3obhmcMdmAD5RWX0Aw" target="_blank"
+                            rel="noopener noreferrer" class="hp-header__icon hp-header__icon--max"
+                            aria-label="Написать в MAX">MAX</a>
+                        <a href="tel:+79060561819" class="hp-header__phone">+7 906 056-18-19</a>
+                    </div>
+            
+                    <a href="index.html" class="hp-header__logo-mobile" aria-label="ART HOMEY — на главную">
+                        <img src="images/logo.png" alt="ART HOMEY — студия индивидуальной мебели">
+                    </a>
+            
+                    <nav class="hp-header__nav" id="nav">
+                        <a href="projects.html">Проекты</a>
+                        <a href="process.html">Этапы</a>
+                        <a href="about.html">О нас</a>
+            
+                        <a href="index.html" class="hp-header__logo" aria-label="ART HOMEY — на главную">
+                            <img src="images/logo.png" alt="ART HOMEY — студия индивидуальной мебели">
+                        </a>
+            
+                        <a href="warranty.html" aria-current="page">Гарантия</a>
+            
+                        <div class="hp-header__dropdown" id="buyerDropdown">
+                            <button type="button" class="hp-header__dropdown-trigger" id="buyerDropdownTrigger"
+                                aria-expanded="false" aria-haspopup="true">
+                                Покупателю <span class="hp-header__dropdown-arrow" aria-hidden="true">⌄</span>
+                            </button>
+                            <ul class="hp-header__dropdown-menu" role="menu">
+                                <li role="none"><a role="menuitem" href="materials.html">Материалы и фурнитура</a></li>
+                                <li role="none"><a role="menuitem" href="faq.html">Частые вопросы</a></li>
+                                <li role="none"><a role="menuitem" href="privacy.html">Политика конфиденциальности</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+            
+                    <div class="hp-header__actions">
+                        <a href="index.html#order" class="hp-header__cta" aria-label="Бесплатная консультация">
+                            <svg class="hp-header__cta-icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                                <path fill="currentColor"
+                                    d="M6.6 2.5 9.2 2c.6-.1 1.1.2 1.3.8l1.2 3.1c.2.5 0 .9-.4 1.2L9.8 8.3a14.8 14.8 0 0 0 5.9 5.9l1.2-1.5c.3-.4.8-.6 1.2-.4l3.1 1.2c.6.2.9.7.8 1.3l-.5 2.6c-.1.7-.7 1.1-1.4 1.1C11.4 18.5 5.5 12.6 5.5 5.9c0-.7.4-1.3 1.1-1.4Z" />
+                            </svg>
+                            <span class="hp-header__cta-text">Бесплатная консультация</span>
+                        </a>
+                        <button class="hp-header__burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false"
+                            aria-controls="nav">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+            
+                </div>
+            </header>
 
     <main class="service-page legal-page">
 

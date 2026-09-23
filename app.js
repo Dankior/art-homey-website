@@ -69,6 +69,37 @@ handleFormSubmit('leadForm');
 handleFormSubmit('ctaForm');
 handleFormSubmit('quizForm');
 
+
+
+// Выпадающее меню «Покупателю» на всех страницах.
+(function initHeaderBuyerDropdown() {
+  const dropdown = document.getElementById('buyerDropdown');
+  const trigger = document.getElementById('buyerDropdownTrigger');
+  if (!dropdown || !trigger) return;
+
+  function closeDropdown() {
+    dropdown.classList.remove('is-open');
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+
+  trigger.addEventListener('click', event => {
+    event.stopPropagation();
+    const willOpen = !dropdown.classList.contains('is-open');
+    dropdown.classList.toggle('is-open', willOpen);
+    trigger.setAttribute('aria-expanded', String(willOpen));
+  });
+
+  document.addEventListener('click', event => {
+    if (!dropdown.contains(event.target)) closeDropdown();
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeDropdown();
+  });
+  dropdown.querySelectorAll('.hp-header__dropdown-menu a').forEach(link => {
+    link.addEventListener('click', closeDropdown);
+  });
+})();
+
 const burgerBtn = document.getElementById('burgerBtn');
 const nav = document.getElementById('nav');
 
