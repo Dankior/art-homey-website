@@ -100,23 +100,132 @@ handleFormSubmit('quizForm');
   });
 })();
 
-const burgerBtn = document.getElementById('burgerBtn');
-const nav = document.getElementById('nav');
+/* Mobile drawer menu — escapes backdrop-filter containing block */
+(function initMobileDrawer() {
+  const burgerBtn = document.getElementById('burgerBtn');
+  const sourceNav = document.getElementById('nav');
+  if (!burgerBtn || !sourceNav) return;
 
-if (burgerBtn && nav) {
-  burgerBtn.addEventListener('click', () => {
-    const isOpen = burgerBtn.classList.toggle('open');
-    nav.classList.toggle('open');
-    burgerBtn.setAttribute('aria-expanded', isOpen);
-  });
+  const MQ = window.matchMedia('(max-width: 880px)');
 
-  nav.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      burgerBtn.classList.remove('open');
-      nav.classList.remove('open');
+  function buildDrawer() {
+    if (document.querySelector('.hp-mobile-drawer')) return document.querySelector('.hp-mobile-drawer');
+
+    const drawer = document.createElement('div');
+    drawer.className = 'hp-mobile-drawer';
+    drawer.setAttribute('role', 'dialog');
+    drawer.setAttribute('aria-modal', 'true');
+    drawer.setAttribute('aria-label', 'Меню');
+
+    const links = [];
+    sourceNav.querySelectorAll(':scope > a:not(.hp-header__logo)').forEach((a) => {
+      links.push({ href: a.getAttribute('href'), text: a.textContent.trim(), current: a.getAttribute('aria-current') === 'page' });
     });
+
+    const dropdown = sourceNav.querySelector('.hp-header__dropdown-menu');
+    const subItems = [];
+    if (dropdown) {
+      dropdown.querySelectorAll('a').forEach((a) => {
+        subItems.push({ href: a.getAttribute('href'), text: a.textContent.trim(), current: a.getAttribute('aria-current') === 'page' });
+      });
+    }
+
+    const navHtml = links.map((l) =>
+      `<a href="${l.href}"${l.current ? ' aria-current="page"' : ''}>${l.text}</a>`
+    ).join('');
+
+    const subHtml = subItems.length
+      ? `<div class="hp-mobile-drawer__group">
+          <button type="button" class="hp-mobile-drawer__trigger" aria-expanded="false">
+            Покупателю <span aria-hidden="true">⌄</span>
+          </button>
+          <div class="hp-mobile-drawer__sub">
+            ${subItems.map((s) => `<a href="${s.href}"${s.current ? ' aria-current="page"' : ''}>${s.text}</a>`).join('')}
+          </div>
+        </div>`
+      : '';
+
+    drawer.innerHTML = `
+      <div class="hp-mobile-drawer__backdrop" data-close></div>
+      <div class="hp-mobile-drawer__panel">
+        <div class="hp-mobile-drawer__head">
+          <span class="hp-mobile-drawer__brand">ART HOMEY</span>
+          <button type="button" class="hp-mobile-drawer__close" data-close aria-label="Закрыть меню">×</button>
+        </div>
+        <nav class="hp-mobile-drawer__nav">
+          ${navHtml}
+          ${subHtml}
+        </nav>
+        <div class="hp-mobile-drawer__footer">
+          <a class="hp-mobile-drawer__phone" href="tel:+79060561819">+7 906 056-18-19</a>
+          <div class="hp-mobile-drawer__messengers">
+            <a href="https://t.me/arthomey" target="_blank" rel="noopener noreferrer">TG</a>
+            <a href="https://wa.me/79060561819" target="_blank" rel="noopener noreferrer">WA</a>
+            <a href="https://max.ru/u/f9LHodD0cOIM9zp4Ho-Bn4nSWSp5nrVu4DwpDjRow3obhmcMdmAD5RWX0Aw" target="_blank" rel="noopener noreferrer">MAX</a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(drawer);
+
+    const group = drawer.querySelector('.hp-mobile-drawer__group');
+    const trigger = drawer.querySelector('.hp-mobile-drawer__trigger');
+    if (group && trigger) {
+      trigger.addEventListener('click', () => {
+        const open = group.classList.toggle('is-open');
+        trigger.setAttribute('aria-expanded', String(open));
+      });
+    }
+
+    drawer.querySelectorAll('[data-close]').forEach((el) => {
+      el.addEventListener('click', closeMenu);
+    });
+
+    drawer.querySelectorAll('.hp-mobile-drawer__nav a').forEach((a) => {
+      a.addEventListener('click', closeMenu);
+    });
+
+    return drawer;
+  }
+
+  function openMenu() {
+    const drawer = buildDrawer();
+    drawer.classList.add('is-open');
+    burgerBtn.classList.add('open');
+    burgerBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('hp-menu-open');
+  }
+
+  function closeMenu() {
+    const drawer = document.querySelector('.hp-mobile-drawer');
+    if (drawer) drawer.classList.remove('is-open');
+    burgerBtn.classList.remove('open');
+    burgerBtn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('hp-menu-open');
+  }
+
+  burgerBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!MQ.matches) {
+      const isOpen = burgerBtn.classList.toggle('open');
+      sourceNav.classList.toggle('open');
+      burgerBtn.setAttribute('aria-expanded', String(isOpen));
+      return;
+    }
+    if (document.body.classList.contains('hp-menu-open')) closeMenu();
+    else openMenu();
   });
-}
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  MQ.addEventListener('change', () => {
+    if (!MQ.matches) closeMenu();
+  });
+})();
+
 
 function smoothScrollTo(targetY, duration = 700) {
   const startY = window.scrollY;
