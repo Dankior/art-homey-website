@@ -1,50 +1,3 @@
-function handleFormSubmit(formId) {
-  const form = document.getElementById(formId);
-  if (!form) return;
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!form.reportValidity()) return;
-
-    const nameField = form.querySelector('input[name="name"]');
-    const name = nameField ? nameField.value.trim() : '';
-    const submitButton = form.querySelector('button[type="submit"]');
-    const status = form.querySelector('.form-status');
-
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.classList.add('is-loading');
-      submitButton.setAttribute('aria-busy', 'true');
-      submitButton.dataset.originalText = submitButton.textContent;
-      submitButton.textContent = 'Отправляем…';
-    }
-
-    // Имитация отправки
-    setTimeout(() => {
-      if (status) {
-        status.textContent = name
-          ? `Спасибо, ${name}! Мы свяжемся с вами в ближайшее время.`
-          : 'Спасибо! Мы свяжемся с вами в ближайшее время.';
-        status.classList.add('is-success');
-      }
-      form.reset();
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.classList.remove('is-loading');
-        submitButton.removeAttribute('aria-busy');
-        submitButton.textContent = submitButton.dataset.originalText || 'Отправить заявку';
-      }
-      // Скрыть сообщение через 6 секунд
-      if (status) {
-        setTimeout(() => {
-          status.textContent = '';
-          status.classList.remove('is-success');
-        }, 6000);
-      }
-    }, 900);
-  });
-}
-
 // Единый формат телефона во всех формах сайта.
 document.querySelectorAll('input[type="tel"]').forEach((input) => {
   input.inputMode = 'tel';
@@ -65,9 +18,9 @@ document.querySelectorAll('input[type="tel"]').forEach((input) => {
   });
 });
 
-handleFormSubmit('leadForm');
-handleFormSubmit('ctaForm');
-handleFormSubmit('quizForm');
+
+
+
 
 
 
@@ -650,7 +603,7 @@ function initFirstScrollHeroReveal() {
   window.addEventListener('keydown', handleKeydown);
 }
 
-initFirstScrollHeroReveal();
+// Main offer is visible immediately; no first-scroll gate.
 
 function initEstimateQuiz() {
   const form = document.getElementById('quizForm');
@@ -705,38 +658,7 @@ function initEstimateQuiz() {
     });
   });
 
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (!form.reportValidity()) return;
-    const name = form.querySelector('input[name="name"]').value.trim();
-    const status = form.querySelector('.form-status');
-    const submitButton = form.querySelector('button[type="submit"]');
-    if (submitButton) {
-      submitButton.disabled = true;
-      submitButton.textContent = 'Отправляем…';
-    }
-    setTimeout(() => {
-      if (status) {
-        status.textContent = name
-          ? `Спасибо, ${name}! Мы получили ваши ответы и свяжемся с вами.`
-          : 'Спасибо! Мы получили ваши ответы и свяжемся с вами.';
-        status.classList.add('is-visible');
-      }
-      form.reset();
-      currentStep = 0;
-      updateQuiz();
-      if (submitButton) {
-        submitButton.disabled = false;
-        submitButton.textContent = 'Получить расчёт';
-      }
-      if (status) {
-        setTimeout(() => {
-          status.textContent = '';
-          status.classList.remove('is-visible');
-        }, 6000);
-      }
-    }, 800);
-  });
+  form.addEventListener('lead-saved', () => { currentStep = 0; updateQuiz(); });
 
   updateQuiz();
 }
@@ -744,27 +666,6 @@ function initEstimateQuiz() {
 initEstimateQuiz();
 
 function initProjectGalleries() {
-  const extraProjectImages = [
-    'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1556912167-f556f1f39fdf?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1600566752229-250ed79470f8?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1558997519-83ea9252edf8?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=900&fit=crop',
-    'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=1200&h=900&fit=crop'
-  ];
-
   document.querySelectorAll('[data-work-project]').forEach((project, projectIndex) => {
     const mainImage = project.querySelector('.work-project__main');
     const buttons = project.querySelectorAll('[data-project-position]');
@@ -773,14 +674,11 @@ function initProjectGalleries() {
     const primaryImage = getComputedStyle(project).getPropertyValue('--project-image').trim();
     const normalizeProjectImage = image => image.replace('w=1200&h=900', 'w=1200&h=900');
     const normalizedPrimaryImage = normalizeProjectImage(primaryImage);
-    const galleryImages = [
-      normalizedPrimaryImage,
-      `url('${normalizeProjectImage(extraProjectImages[(projectIndex * 2) % extraProjectImages.length])}')`,
-      `url('${normalizeProjectImage(extraProjectImages[(projectIndex * 2 + 1) % extraProjectImages.length])}')`
-    ];
+    const galleryImages = [normalizedPrimaryImage];
     mainImage.style.backgroundImage = normalizedPrimaryImage;
 
     buttons.forEach((button, imageIndex) => {
+      if (imageIndex > 0) { button.hidden = true; return; }
       const image = galleryImages[imageIndex] || normalizedPrimaryImage;
       button.style.backgroundImage = image;
       button.addEventListener('click', () => {
@@ -855,6 +753,7 @@ function initScrollReveal() {
   });
 
   requestAnimationFrame(() => items.forEach(element => observer.observe(element)));
+  setTimeout(() => items.forEach(element => element.classList.add("is-visible")), 2500);
 }
 
 initScrollReveal();
@@ -878,124 +777,12 @@ if (projectFilters) {
 }
 
 
-/* ========== Cost Popup (unexpected moment) ========== */
-(function initCostPopup() {
-  const overlay = document.getElementById('costPopup');
-  if (!overlay) return;
-
-  const closeBtn = document.getElementById('popupClose');
-  const form = document.getElementById('popupForm');
-  const STORAGE_KEY = 'arthomey_popup_shown';
-
-  // Не показываем повторно в этой сессии
-  if (sessionStorage.getItem(STORAGE_KEY)) return;
-
-  let shown = false;
-  let scrollTriggered = false;
-  let timerTriggered = false;
-
-  function openPopup() {
-    if (shown) return;
-    shown = true;
-    sessionStorage.setItem(STORAGE_KEY, '1');
-    overlay.classList.add('is-open');
-    overlay.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    // Фокус на первое поле
-    setTimeout(() => {
-      const firstInput = form && form.querySelector('input');
-      if (firstInput) firstInput.focus();
-    }, 320);
-  }
-
-  function closePopup() {
-    overlay.classList.remove('is-open');
-    overlay.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-
-  // Закрытие
-  if (closeBtn) closeBtn.addEventListener('click', closePopup);
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closePopup();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closePopup();
-  });
-
-  // Триггер 1: после 28 секунд на сайте
-  setTimeout(() => {
-    timerTriggered = true;
-    if (!shown) openPopup();
-  }, 28000);
-
-  // Триггер 2: когда проскроллили ~48% страницы (неожиданно в середине)
-  function onScroll() {
-    if (shown) return;
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    if (docHeight <= 0) return;
-    const progress = scrollTop / docHeight;
-    if (progress >= 0.48) {
-      scrollTriggered = true;
-      openPopup();
-      window.removeEventListener('scroll', onScroll);
-    }
-  }
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  // Обработка формы попапа
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!form.reportValidity()) return;
-
-      const nameField = form.querySelector('input[name="name"]');
-      const name = nameField ? nameField.value.trim() : '';
-      const btn = form.querySelector('button[type="submit"]');
-      const status = form.querySelector('.form-status');
-
-      if (btn) {
-        btn.disabled = true;
-        btn.classList.add('is-loading');
-        btn.textContent = 'Отправляем…';
-      }
-
-      setTimeout(() => {
-        if (status) {
-          status.textContent = name
-            ? `Спасибо, ${name}! Мы свяжемся с вами в ближайшее время.`
-            : 'Спасибо! Мы свяжемся с вами в ближайшее время.';
-          status.classList.add('is-visible');
-        }
-        form.reset();
-        if (btn) {
-          btn.disabled = false;
-          btn.classList.remove('is-loading');
-          btn.textContent = 'Отправить заявку';
-        }
-        // Закрываем через 2.8 сек после успеха
-        setTimeout(closePopup, 2800);
-      }, 900);
-    });
-  }
-})();
-
 /* Shared footer for all inner pages */
 (function initSharedFooter() {
   const footer = document.querySelector('.site-footer, .footer');
   if (!footer) return;
   footer.className = 'footer';
   footer.innerHTML = `<div class="container footer__inner footer__grid"><div class="footer__brand"><a href="index.html" class="logo"><img src="images/logo.png" alt="ART HOMEY — студия индивидуальной мебели"></a><p>Москва и область</p><small>Индивидуальная мебель в Москве и области</small></div><div><h3>Услуги</h3><a href="process.html">Этапы работы</a><a href="projects.html">Портфолио</a><a href="about.html">О нас и производство</a></div><div><h3>Покупателю</h3><a href="index.html#order">Бесплатная консультация</a><a href="materials.html">Материалы и фурнитура</a><a href="faq.html">Частые вопросы</a><a href="privacy.html">Политика конфиденциальности</a><a href="warranty.html">Гарантия</a></div><div class="footer__contacts"><h3>Контакты</h3><a href="tel:+79060561819">+7 906 056-18-19</a><a href="mailto:arthomey@yandex.ru">arthomey@yandex.ru</a><span>Ежедневно, 09:00–21:00</span></div></div><div class="container footer__bottom"><span>© 2026 ART HOMEY</span><a class="footer__legal-link" href="privacy.html">Политика конфиденциальности</a><span>Информация не является публичной офертой</span></div>`;
-})();
-
-(function initSharedMessengers() {
-  if (document.querySelector('.desktop-messengers')) return;
-  const node = document.createElement('div');
-  node.className = 'desktop-messengers';
-  node.setAttribute('aria-label', 'Написать в мессенджер');
-  node.innerHTML = '<a href="https://wa.me/79060561819" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">WA</a><a href="https://t.me/arthomey" target="_blank" rel="noopener noreferrer" aria-label="Telegram">TG</a><a href="https://max.ru/u/f9LHodD0cOIM9zp4Ho-Bn4nSWSp5nrVu4DwpDjRow3obhmcMdmAD5RWX0Aw" target="_blank" rel="noopener noreferrer" aria-label="MAX">MAX</a>';
-  document.body.appendChild(node);
 })();
 
 (function initBuyerMenu() {
@@ -1013,18 +800,7 @@ if (projectFilters) {
   });
 })();
 
-(function moveConsultationAction() {
-  document.querySelectorAll('.nav__cta').forEach((link) => link.remove());
-  const rail = document.querySelector('.desktop-messengers');
-  if (!rail || rail.querySelector('.messenger-consultation')) return;
-  const link = document.createElement('a');
-  link.className = 'messenger-consultation';
-  link.href = 'index.html#order';
-  link.setAttribute('aria-label', 'Позвонить и получить консультацию');
-  link.innerHTML = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 2.5 9.2 2c.6-.1 1.1.2 1.3.8l1.2 3.1c.2.5 0 .9-.4 1.2L9.8 8.3a14.8 14.8 0 0 0 5.9 5.9l1.2-1.5c.3-.4.8-.6 1.2-.4l3.1 1.2c.6.2.9.7.8 1.3l-.5 2.6c-.1.7-.7 1.1-1.4 1.1C11.4 18.5 5.5 12.6 5.5 5.9c0-.7.4-1.3 1.1-1.4Z"/></svg>';
-  rail.insertBefore(link, rail.firstChild);
-})();
-
+document.querySelectorAll('.nav__cta').forEach(link => link.remove());
 
 /* Header solid on scroll (Mr.Doors style) */
 (function initHeaderScroll() {
