@@ -1,0 +1,22 @@
+Удалённые файлы:
+tsconfig.tsbuildinfo — кэш сборки
+warranty.html — устаревшая версия; актуальный файл: public/warranty.html
+index.html — устаревшая версия; актуальный файл: public/index.html
+process.html — устаревшая версия; актуальный файл: public/process.html
+materials-extra.css — точный дубликат; актуальный файл: public/materials-extra.css
+about.html — устаревшая версия; актуальный файл: public/about.html
+materials.html — устаревшая версия; актуальный файл: public/materials.html
+catalog.css — точный дубликат; актуальный файл: public/catalog.css
+projects.html — устаревшая версия; актуальный файл: public/projects.html
+style.css — точный дубликат; актуальный файл: public/style.css
+sitemap.xml — точный дубликат; актуальный файл: public/sitemap.xml
+robots.txt — точный дубликат; актуальный файл: public/robots.txt
+faq.html — устаревшая версия; актуальный файл: public/faq.html
+app.js — устаревшая версия; актуальный файл: public/app.js
+privacy.html — устаревшая версия; актуальный файл: public/privacy.html
+images/hero-interior.webp — точный дубликат; актуальный файл: public/images/hero-interior.webp
+images/hero-interior.png — точный дубликат; актуальный файл: public/images/hero-interior.png
+images/logo.png — точный дубликат; актуальный файл: public/images/logo.png
+public/interior.webp — неиспользуемое изображение прежнего макета
+examples/d1/db/schema.ts — пример из стартового шаблона
+examples/d1/app/api/notes/route.ts — пример из стартового шаблона
