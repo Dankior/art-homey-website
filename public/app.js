@@ -1,3 +1,20 @@
+/**
+ * ART HOMEY — основной клиентский скрипт
+ * Структура:
+ *  1. Форматирование телефонов
+ *  2. Выпадающее меню «Покупателю»
+ *  3. Мобильное меню (drawer)
+ *  4. Плавный скролл по якорям
+ *  5. Слайдеры проектов
+ *  6. Витрина (showcase) и отзывы (testimonials)
+ *  7. Квиз оценки стоимости
+ *  8. Галереи проектов
+ *  9. Scroll-reveal анимации
+ * 10. Фильтры портфолио
+ * 11. Общий футер и меню навигации
+ * 12. Шапка при скролле
+ */
+
 // Единый формат телефона во всех формах сайта.
 document.querySelectorAll('input[type="tel"]').forEach((input) => {
   input.inputMode = 'tel';
@@ -234,26 +251,27 @@ function initSliders() {
     const dotsContainer = slider.querySelector('[data-dots]');
     const prevBtn = slider.querySelector('[data-prev]');
     const nextBtn = slider.querySelector('[data-next]');
+    if (!track || !slides.length) return;
     let currentIndex = 0;
 
-    slides.forEach((_, i) => {
-      const dot = document.createElement('button');
-      dot.classList.add('slider__dot');
-      dot.type = 'button';
-      dot.setAttribute('aria-label', `Показать фото ${i + 1}`);
-      if (i === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => goToSlide(i));
-      dotsContainer.appendChild(dot);
-    });
-
-    const dots = dotsContainer.querySelectorAll('.slider__dot');
+    const dots = [];
+    if (dotsContainer) {
+      slides.forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.classList.add('slider__dot');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', `Показать фото ${i + 1}`);
+        if (i === 0) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+        dots.push(dot);
+      });
+    }
 
     function goToSlide(index) {
       currentIndex = (index + slides.length) % slides.length;
       track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-      dots.forEach(dot => dot.classList.remove('active'));
-      dots[currentIndex].classList.add('active');
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === currentIndex));
       slider.closest('.project-card')?.querySelectorAll('[data-port-slide]').forEach(button => {
         const active = Number(button.dataset.portSlide) === currentIndex;
         button.classList.toggle('is-active', active);
@@ -264,9 +282,13 @@ function initSliders() {
     slider.closest('.project-card')?.querySelectorAll('[data-port-slide]').forEach(button => {
       button.addEventListener('click', () => goToSlide(Number(button.dataset.portSlide)));
     });
-    if (slides.length < 2) { prevBtn.hidden = true; nextBtn.hidden = true; dotsContainer.hidden = true; }
-    prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
-    nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+    if (slides.length < 2) {
+      if (prevBtn) prevBtn.hidden = true;
+      if (nextBtn) nextBtn.hidden = true;
+      if (dotsContainer) dotsContainer.hidden = true;
+    }
+    if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+    if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
   });
 }
 
@@ -296,10 +318,12 @@ function initShowcase() {
     dot.classList.add('showcase__dot');
     if (i === 0) dot.classList.add('active');
     dot.addEventListener('click', () => manualGoTo(i));
-    dotsContainer.appendChild(dot);
+    if (dotsContainer) {
+      dotsContainer.appendChild(dot);
+    }
   });
 
-  const dots = Array.from(dotsContainer.querySelectorAll('.showcase__dot'));
+  const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll('.showcase__dot')) : [];
   cards[0].classList.add('is-active');
 
   cards.forEach((card, i) => {
@@ -448,10 +472,12 @@ function initTestimonials() {
     dot.classList.add('testimonials__dot');
     if (i === 0) dot.classList.add('active');
     dot.addEventListener('click', () => manualGoTo(i));
-    dotsContainer.appendChild(dot);
+    if (dotsContainer) {
+      dotsContainer.appendChild(dot);
+    }
   });
 
-  const dots = Array.from(dotsContainer.querySelectorAll('.testimonials__dot'));
+  const dots = dotsContainer ? Array.from(dotsContainer.querySelectorAll('.testimonials__dot')) : [];
 
   cards.forEach((card, i) => {
     card.addEventListener('click', () => manualGoTo(i));

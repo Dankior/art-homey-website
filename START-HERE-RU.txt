@@ -1,15 +1,26 @@
-ART HOMEY — актуальная версия от 27.09.2026
+ART HOMEY — актуальная версия от 27.09.2026 (очищена и структурирована)
 
-Страницы сайта: public/index.html и остальные HTML в public/.
-Фотографии: public/images/.
-Общие стили: public/style.css и public/improvements.css.
-Увеличение фотографий: public/photo-viewer.js.
+Страницы сайта: public/*.html
+Фотографии: public/images/
+Стили: public/style.css + public/improvements.css (+ catalog.css / materials-extra.css где нужно)
+Скрипты:
+  - public/app.js          — основной (меню, слайдеры, анимации, фильтры)
+  - public/leads.js        — формы заявок
+  - public/contact-widget.js
+  - public/photo-viewer.js — увеличение фото (index, projects)
 
-В архив включены исходники, фотографии, настройки и lock-файл.
-Зависимости node_modules и история Git не включены.
+API заявок: app/api/requests/route.ts + Cloudflare D1 (db/)
 
-Для разработки: установите Node.js >=22.13 и pnpm, затем выполните в папке проекта:
-pnpm install
-pnpm dev
+Для разработки:
+  Node.js >= 22.13, pnpm
+  pnpm install
+  pnpm dev
 
-Форма заявки использует серверный обработчик /api/requests и базу D1. При переносе на другой хостинг необходимо настроить серверную часть формы.
+Статический просмотр: просто откройте public/index.html или поднимите любой static-server в папке public/.
+
+Исправления в этой версии:
+  - убрана вложенная копия art-homey-website
+  - удалены __MACOSX / .DS_Store
+  - добавлены null-checks в слайдерах (showcase, testimonials, project sliders)
+  - унифицированы подключения скриптов во всех HTML
+  - код app.js снабжён структурой и комментариями
