@@ -239,6 +239,8 @@ function initSliders() {
     slides.forEach((_, i) => {
       const dot = document.createElement('button');
       dot.classList.add('slider__dot');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Показать фото ${i + 1}`);
       if (i === 0) dot.classList.add('active');
       dot.addEventListener('click', () => goToSlide(i));
       dotsContainer.appendChild(dot);
@@ -252,8 +254,17 @@ function initSliders() {
 
       dots.forEach(dot => dot.classList.remove('active'));
       dots[currentIndex].classList.add('active');
+      slider.closest('.project-card')?.querySelectorAll('[data-port-slide]').forEach(button => {
+        const active = Number(button.dataset.portSlide) === currentIndex;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
     }
 
+    slider.closest('.project-card')?.querySelectorAll('[data-port-slide]').forEach(button => {
+      button.addEventListener('click', () => goToSlide(Number(button.dataset.portSlide)));
+    });
+    if (slides.length < 2) { prevBtn.hidden = true; nextBtn.hidden = true; dotsContainer.hidden = true; }
     prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
     nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
   });
@@ -666,27 +677,14 @@ function initEstimateQuiz() {
 initEstimateQuiz();
 
 function initProjectGalleries() {
-  document.querySelectorAll('[data-work-project]').forEach((project, projectIndex) => {
-    const mainImage = project.querySelector('.work-project__main');
-    const buttons = project.querySelectorAll('[data-project-position]');
-    if (!mainImage || !buttons.length) return;
-
-    const primaryImage = getComputedStyle(project).getPropertyValue('--project-image').trim();
-    const normalizeProjectImage = image => image.replace('w=1200&h=900', 'w=1200&h=900');
-    const normalizedPrimaryImage = normalizeProjectImage(primaryImage);
-    const galleryImages = [normalizedPrimaryImage];
-    mainImage.style.backgroundImage = normalizedPrimaryImage;
-
-    buttons.forEach((button, imageIndex) => {
-      if (imageIndex > 0) { button.hidden = true; return; }
-      const image = galleryImages[imageIndex] || normalizedPrimaryImage;
-      button.style.backgroundImage = image;
-      button.addEventListener('click', () => {
-        mainImage.style.backgroundImage = image;
-        mainImage.style.backgroundPosition = 'center';
-        buttons.forEach(item => item.classList.toggle('is-active', item === button));
-      });
-    });
+  document.querySelectorAll('[data-work-project]').forEach(project => {
+    const main = project.querySelector('.work-project__main');
+    const buttons = project.querySelectorAll('[data-project-image]');
+    buttons.forEach(button => button.addEventListener('click', () => {
+      main.style.backgroundImage = `url('${button.dataset.projectImage}')`;
+      main.setAttribute('aria-label', button.getAttribute('aria-label'));
+      buttons.forEach(item => { const active = item === button; item.classList.toggle('is-active', active); item.setAttribute('aria-pressed', String(active)); });
+    }));
   });
 }
 
@@ -763,12 +761,13 @@ if (projectFilters) {
   const projects = [...document.querySelectorAll('[data-work-project]')];
   const selected = { type: 'all', wood: 'all' };
   const classify = (project) => {
+    if (project.dataset.projectType) return { type: project.dataset.projectType, wood: project.dataset.projectWood };
     const text = project.textContent.toLowerCase();
     return { type: text.includes('гардероб') ? 'wardrobe' : (text.includes('кух') ? 'kitchen' : (text.includes('шкаф') || text.includes('хранен') ? 'storage' : 'other')), wood: text.includes('шпон') ? 'veneer' : (text.includes('массив') ? 'solid' : (text.includes('мдф') || text.includes('эмаль') ? 'mdf' : (text.includes('пластик') ? 'plastic' : 'other'))) };
   };
   const updateProjects = () => {
     let visible = 0;
-    projects.forEach((project) => { const tags = classify(project); const matches = (selected.type === 'all' || tags.type === selected.type) && (selected.wood === 'all' || tags.wood === selected.wood); project.classList.toggle('is-hidden', !matches); if (matches) visible++; });
+    projects.forEach((project) => { const tags = classify(project); const matches = (selected.type === 'all' || tags.type === selected.type) && (selected.wood === 'all' || tags.wood.split(' ').includes(selected.wood)); project.classList.toggle('is-hidden', !matches); if (matches) visible++; });
     const empty = document.querySelector('.project-filter-empty');
     if (empty) empty.hidden = visible !== 0;
   };

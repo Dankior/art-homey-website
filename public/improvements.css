@@ -84,3 +84,30 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible 
 @media (max-width: 880px) {
   .warranty-page .subhero--legal { padding-top: 64px; }
 }
+
+/* Original layouts with photographs from ART HOMEY project galleries. */
+.source-project-slide {overflow:hidden;}
+.source-project-slide img {display:block;width:100%;height:100%;object-fit:cover;}
+.work-project__thumbs {overflow-x:auto;padding-bottom:8px;max-width:100%;}
+.work-project__thumbs button {flex:0 0 82px;background:none;overflow:hidden;}
+.work-project__thumbs button img {display:block;width:100%;height:100%;object-fit:cover;}
+.work-project__main {background-size:contain;background-repeat:no-repeat;background-color:#efefed;}
+.slider [hidden] {display:none!important;}
+
+/* Correct project thumbnails and a shared full-size photo viewer. */
+.case-study .case-study__gallery > div {background-size:cover;background-position:center;background-repeat:no-repeat;}
+.photo-zoomable {cursor:zoom-in;}
+.photo-zoomable:focus-visible {outline:3px solid #b99a62;outline-offset:4px;}
+.photo-viewer {position:fixed;inset:0;box-sizing:border-box;width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:64px 70px 28px;border:0;background:rgba(15,15,15,.97);color:#fff;}
+.photo-viewer[open] {display:flex;align-items:center;justify-content:center;}
+.photo-viewer::backdrop {background:rgba(0,0,0,.85);}
+.photo-viewer figure {margin:0;max-width:100%;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.photo-viewer figure img {display:block;max-width:100%;min-height:0;max-height:calc(100% - 58px);object-fit:contain;pointer-events:auto;}
+.photo-viewer figcaption {padding-top:16px;font-size:14px;line-height:1.5;text-align:center;}
+.photo-viewer button {position:absolute;display:grid;place-items:center;width:48px;height:48px;border:1px solid #ffffff55;border-radius:50%;background:#232323;color:#fff;cursor:pointer;font-size:32px;line-height:1;z-index:1;}
+.photo-viewer button:focus-visible {outline:3px solid #b99a62;outline-offset:3px;}
+.photo-viewer__close {top:16px;right:20px;}
+.photo-viewer__prev {left:12px;top:calc(50% - 24px);}
+.photo-viewer__next {right:12px;top:calc(50% - 24px);}
+.photo-viewer [hidden] {display:none!important;}
+@media(max-width:600px){.photo-viewer{padding:72px 12px 85px;}.photo-viewer__prev{top:auto;bottom:20px;left:calc(50% - 60px);}.photo-viewer__next{top:auto;bottom:20px;right:calc(50% - 60px);}}
