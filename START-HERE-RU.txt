@@ -1,26 +1,21 @@
-ART HOMEY — актуальная версия от 27.09.2026 (очищена и структурирована)
+ART HOMEY — исправленная версия, 28.09.2026
 
-Страницы сайта: public/*.html
-Фотографии: public/images/
-Стили: public/style.css + public/improvements.css (+ catalog.css / materials-extra.css где нужно)
-Скрипты:
-  - public/app.js          — основной (меню, слайдеры, анимации, фильтры)
-  - public/leads.js        — формы заявок
-  - public/contact-widget.js
-  - public/photo-viewer.js — увеличение фото (index, projects)
+Начните с README-RU.md. Там есть локальный запуск и пошаговая инструкция
+для бесплатного тарифа Cloudflare Workers + D1 и уведомлений в Telegram.
 
-API заявок: app/api/requests/route.ts + Cloudflare D1 (db/)
+Локальный запуск (Node.js 24 LTS и pnpm 11):
+  pnpm install --frozen-lockfile
+  pnpm db:local
+  pnpm preview:local
+Откройте http://127.0.0.1:8787
 
-Для разработки:
-  Node.js >= 22.13, pnpm
-  pnpm install
-  pnpm dev
+Файлы страниц: docs/
+Сервер заявок: server/requests.mjs
+Уведомления Telegram: server/notifications.mjs
+Конфигурация локального запуска: wrangler.standalone.jsonc
+Проверки: pnpm test, pnpm typecheck, pnpm lint, pnpm build, pnpm check:deploy
 
-Статический просмотр: просто откройте public/index.html или поднимите любой static-server в папке public/.
-
-Исправления в этой версии:
-  - убрана вложенная копия art-homey-website
-  - удалены __MACOSX / .DS_Store
-  - добавлены null-checks в слайдерах (showcase, testimonials, project sliders)
-  - унифицированы подключения скриптов во всех HTML
-  - код app.js снабжён структурой и комментариями
+Это исходный проект, не опубликованный сайт.
+Для публикации понадобятся ваш бесплатный аккаунт Cloudflare и Telegram-бот.
+Никаких токенов и реальных данных клиентов в архиве нет.
+Простой просмотр docs/index.html не запускает сервер заявок.

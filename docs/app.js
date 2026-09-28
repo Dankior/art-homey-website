@@ -15,31 +15,19 @@
  * 12. Шапка при скролле
  */
 
-// Единый формат телефона во всех формах сайта.
-document.querySelectorAll('input[type="tel"]').forEach((input) => {
+// Format complete numbers on blur so deletion and caret movement remain native.
+document.querySelectorAll('input[type="tel"]').forEach(input => {
   input.inputMode = 'tel';
-  input.addEventListener('input', () => {
-    const digits = input.value.replace(/\D/g, '').replace(/^8/, '7').slice(0, 11);
-    if (!digits) {
-      input.value = '';
-      return;
-    }
-    const normalized = digits.padEnd(1, '');
-    let formatted = '+7';
-    if (normalized.length > 1) formatted += ` (${normalized.slice(1, 4)}`;
-    if (normalized.length >= 4) formatted += ')';
-    if (normalized.length > 4) formatted += ` ${normalized.slice(4, 7)}`;
-    if (normalized.length > 7) formatted += `-${normalized.slice(7, 9)}`;
-    if (normalized.length > 9) formatted += `-${normalized.slice(9, 11)}`;
-    input.value = formatted;
+  input.addEventListener('input', () => input.setCustomValidity(''));
+  input.addEventListener('blur', () => {
+    if (!/^\+?[\d\s()\-]+$/.test(input.value.trim())) return;
+    let digits = input.value.replace(/\D/g, '');
+    if (digits.length === 10 && !input.value.trim().startsWith('+')) digits = '7' + digits;
+    else if (digits.length === 11 && digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (!/^7\d{10}$/.test(digits)) return;
+    input.value = `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
   });
 });
-
-
-
-
-
-
 
 // Выпадающее меню «Покупателю» на всех страницах.
 (function initHeaderBuyerDropdown() {
@@ -77,12 +65,15 @@ document.querySelectorAll('input[type="tel"]').forEach((input) => {
   if (!burgerBtn || !sourceNav) return;
 
   const MQ = window.matchMedia('(max-width: 880px)');
+  let backgroundState = [];
+  const focusable = drawer => [...drawer.querySelectorAll('a[href], button:not([disabled])')].filter(el => el.getClientRects().length);
 
   function buildDrawer() {
     if (document.querySelector('.hp-mobile-drawer')) return document.querySelector('.hp-mobile-drawer');
 
     const drawer = document.createElement('div');
     drawer.className = 'hp-mobile-drawer';
+    drawer.hidden = true;
     drawer.setAttribute('role', 'dialog');
     drawer.setAttribute('aria-modal', 'true');
     drawer.setAttribute('aria-label', 'Меню');
@@ -161,7 +152,11 @@ document.querySelectorAll('input[type="tel"]').forEach((input) => {
 
   function openMenu() {
     const drawer = buildDrawer();
+    drawer.hidden = false;
+    backgroundState = [...document.body.children].filter(el => el !== drawer).map(el => [el, el.inert]);
+    backgroundState.forEach(([el]) => {el.inert = true;});
     drawer.classList.add('is-open');
+    drawer.querySelector('.hp-mobile-drawer__close').focus();
     burgerBtn.classList.add('open');
     burgerBtn.setAttribute('aria-expanded', 'true');
     document.body.classList.add('hp-menu-open');
@@ -169,7 +164,11 @@ document.querySelectorAll('input[type="tel"]').forEach((input) => {
 
   function closeMenu() {
     const drawer = document.querySelector('.hp-mobile-drawer');
-    if (drawer) drawer.classList.remove('is-open');
+    const wasOpen = drawer?.classList.contains('is-open');
+    if (drawer) {drawer.classList.remove('is-open'); drawer.hidden = true;}
+    backgroundState.forEach(([el, inert]) => {el.inert = inert;});
+    backgroundState = [];
+    if (wasOpen) burgerBtn.focus({preventScroll:true});
     burgerBtn.classList.remove('open');
     burgerBtn.setAttribute('aria-expanded', 'false');
     document.body.classList.remove('hp-menu-open');
@@ -188,7 +187,14 @@ document.querySelectorAll('input[type="tel"]').forEach((input) => {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
+    const drawer = document.querySelector('.hp-mobile-drawer.is-open');
+    if (!drawer) return;
+    if (e.key === 'Escape') {e.preventDefault(); closeMenu();}
+    if (e.key === 'Tab') {
+      const items = focusable(drawer), first = items[0], last = items[items.length - 1];
+      if (e.shiftKey && (document.activeElement === first || !drawer.contains(document.activeElement))) {e.preventDefault(); last?.focus();}
+      else if (!e.shiftKey && (document.activeElement === last || !drawer.contains(document.activeElement))) {e.preventDefault(); first?.focus();}
+    }
   });
 
   MQ.addEventListener('change', () => {
@@ -307,7 +313,8 @@ function initShowcase() {
   if (!cards.length) return;
 
   let activeIndex = 0;
-  let isPaused = false;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let isPaused = motionPreference.matches;
   let isScrolling = false;
   let autoplayTimer = null;
   let scrollRaf = null;
@@ -316,6 +323,7 @@ function initShowcase() {
     const dot = document.createElement('button');
     dot.type = 'button';
     dot.classList.add('showcase__dot');
+    dot.setAttribute('aria-label', `Показать решение ${i + 1}`);
     if (i === 0) dot.classList.add('active');
     dot.addEventListener('click', () => manualGoTo(i));
     if (dotsContainer) {
@@ -401,6 +409,7 @@ function initShowcase() {
 
   function startAutoplay() {
     stopAutoplay();
+    if (isPaused || motionPreference.matches) return;
     autoplayTimer = setInterval(() => {
       if (isScrolling) return;
       if (activeIndex + 1 >= cards.length) scrollToCard(0);
@@ -436,6 +445,11 @@ function initShowcase() {
     });
   }
 
+  motionPreference.addEventListener('change', () => {
+    if (motionPreference.matches) {stopAutoplay(); if (scrollRaf) cancelAnimationFrame(scrollRaf); scrollRaf = null; isScrolling = false;}
+    else if (!isPaused) startAutoplay();
+  });
+  if (pauseBtn && motionPreference.matches) {pauseBtn.hidden = true;}
   startAutoplay();
 }
 
@@ -454,7 +468,8 @@ function initTestimonials() {
   if (!cards.length) return;
 
   let activeIndex = 0;
-  let isPaused = false;
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let isPaused = motionPreference.matches;
   let isScrolling = false;
   let autoplayTimer = null;
   let scrollRaf = null;
@@ -470,6 +485,7 @@ function initTestimonials() {
     const dot = document.createElement('button');
     dot.type = 'button';
     dot.classList.add('testimonials__dot');
+    dot.setAttribute('aria-label', `Показать отзыв ${i + 1}`);
     if (i === 0) dot.classList.add('active');
     dot.addEventListener('click', () => manualGoTo(i));
     if (dotsContainer) {
@@ -529,7 +545,8 @@ function initTestimonials() {
 
     activeIndex = index;
     updateDots();
-    smoothScrollTo(getTargetScroll(activeIndex), 700);
+    if (motionPreference.matches) track.scrollLeft = getTargetScroll(activeIndex);
+    else smoothScrollTo(getTargetScroll(activeIndex), 700);
   }
 
   function manualGoTo(index) {
@@ -547,6 +564,7 @@ function initTestimonials() {
 
   function startAutoplay() {
     stopAutoplay();
+    if (isPaused || motionPreference.matches) return;
     autoplayTimer = setInterval(() => {
       if (isScrolling) return;
       if (activeIndex + 1 >= cards.length) scrollToCard(0);
@@ -657,6 +675,8 @@ function initEstimateQuiz() {
       const isActive = index === currentStep;
       step.hidden = !isActive;
       step.classList.toggle('is-active', isActive);
+      const next = step.querySelector('.quiz-next');
+      if (next) next.disabled = !step.querySelector('input[type="radio"]:checked');
     });
 
     if (progress) progress.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
@@ -679,6 +699,8 @@ function initEstimateQuiz() {
       && currentStep < steps.length - 1;
 
     if (shouldAdvance) {
+      const next = activeStep.querySelector('.quiz-next');
+      if (next) next.disabled = false;
       if (transitionTimer) window.clearTimeout(transitionTimer);
       transitionTimer = window.setTimeout(() => {
         currentStep += 1;
@@ -688,14 +710,35 @@ function initEstimateQuiz() {
     }
   });
 
+  form.querySelectorAll('.quiz-next').forEach(button => {
+    button.addEventListener('click', () => {
+      if (currentStep >= steps.length - 1 || !steps[currentStep].querySelector('input[type="radio"]:checked')) return;
+      if (transitionTimer) window.clearTimeout(transitionTimer);
+      transitionTimer = null;
+      currentStep += 1;
+      updateQuiz({moveFocus:true});
+    });
+  });
+
   form.querySelectorAll('.quiz-back').forEach(button => {
     button.addEventListener('click', () => {
+      if (transitionTimer) window.clearTimeout(transitionTimer);
+      transitionTimer = null;
       currentStep = Math.max(currentStep - 1, 0);
       updateQuiz({ moveFocus: true });
     });
   });
 
-  form.addEventListener('lead-saved', () => { currentStep = 0; updateQuiz(); });
+  form.addEventListener('lead-restart', () => {
+    if (transitionTimer) window.clearTimeout(transitionTimer);
+    transitionTimer = null; currentStep = 0; updateQuiz({moveFocus:true});
+  });
+  form.addEventListener('lead-saved', () => {
+    if (transitionTimer) window.clearTimeout(transitionTimer);
+    transitionTimer = null;
+    if (counter) counter.textContent = 'Заявка принята';
+    if (progress) progress.style.width = '100%';
+  });
 
   updateQuiz();
 }

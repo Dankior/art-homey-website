@@ -111,3 +111,21 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible 
 .photo-viewer__next {right:12px;top:calc(50% - 24px);}
 .photo-viewer [hidden] {display:none!important;}
 @media(max-width:600px){.photo-viewer{padding:72px 12px 85px;}.photo-viewer__prev{top:auto;bottom:20px;left:calc(50% - 60px);}.photo-viewer__next{top:auto;bottom:20px;right:calc(50% - 60px);}}
+
+/* Form confirmation and keyboard-accessible navigation. */
+[hidden] {display:none !important;}
+.lead-trap {position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;}
+.lead-success {grid-column:1 / -1;padding:24px 0;}
+.lead-success h3 {font-size:clamp(24px,3vw,36px);margin:0 0 16px;}
+.lead-success p {margin:0 0 18px;line-height:1.6;}
+.lead-success a {text-decoration:underline;}
+.lead-success button {margin-top:12px;}
+.quiz-messenger-contact {display:grid;gap:8px;margin:18px 0;}
+.quiz-messenger-contact input {width:100%;min-width:0;padding:14px;border:1px solid #ccc;background:#fff;color:#171713;}
+.quiz-messenger-contact small {line-height:1.5;}
+:focus-visible {outline:2px solid #927231;outline-offset:4px;}
+.about-page .about__inner, .about-page .experience .about__inner {grid-template-columns:minmax(0, 1fr);max-width:900px;}
+.process-page .timeline__row {grid-template-columns:minmax(0, 1fr);}
+
+.quiz-next {border:0;padding:14px 22px;background:#b69755;color:#171713;font:inherit;cursor:pointer;}
+.quiz-next:disabled {opacity:.45;cursor:default;}
