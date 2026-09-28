@@ -1,0 +1,21 @@
+/*
+Theme Name: ART HOMEY Journal
+Description: Редактор и оформление статей ART HOMEY. Установка WordPress в /journal/.
+Version: 1.0.0
+Requires at least: 6.6
+Requires PHP: 8.1
+Text Domain: art-homey-journal
+*/
+.editorial-copy img { max-width:100%; height:auto; }
+.editorial-copy figure { max-width:100%; margin:24px 0; }
+.editorial-copy iframe { max-width:100%; }
+.editorial-copy .wp-block-table { overflow-x:auto; }
+.editorial-copy table { border-collapse:collapse; width:100%; }
+.editorial-copy td,.editorial-copy th { padding:12px; border:1px solid #ccc; }
+.journal-cover { width:100%; max-height:520px; object-fit:contain; margin-bottom:32px; }
+.advice-card img { width:100%; aspect-ratio:16/10; object-fit:cover; margin-bottom:16px; }
+.journal-pagination { margin-top:32px; display:flex; flex-wrap:wrap; gap:12px; }
+.journal-pagination a,.journal-pagination span { padding:10px 16px; border:1px solid #ccc; }
+.admin-bar .header.hp-header { top:32px; }
+@media(max-width:782px){.admin-bar .header.hp-header{top:46px;}}
+@media(max-width:600px){.admin-bar .header.hp-header{position:absolute!important;}}
