@@ -5848,7 +5848,7 @@ h2 {
   /* Body lock when menu open */
   body.hp-menu-open {
     overflow: hidden !important;
-    touch-action: none;
+    touch-action: auto;
   }
 
   /* Content offset under fixed header */

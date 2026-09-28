@@ -129,3 +129,70 @@ a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible 
 
 .quiz-next {border:0;padding:14px 22px;background:#b69755;color:#171713;font:inherit;cursor:pointer;}
 .quiz-next:disabled {opacity:.45;cursor:default;}
+
+
+/* Mobile layout: shared by every page, after the legacy page styles. */
+@media (max-width: 880px) {
+  html { scroll-padding-top: 80px; }
+  body.hp-menu-open { touch-action: auto; }
+  .header.hp-header .hp-header__cta {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px;
+  }
+  .header.hp-header .hp-header__burger { width: 44px; height: 44px; }
+  .hp-mobile-drawer__panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .hp-mobile-drawer__nav { flex: 1 0 auto; overflow: visible; min-height: 0; }
+  .hp-mobile-drawer__close { width: 44px; height: 44px; flex-shrink: 0; }
+  .cta__form, .quiz-form, .quiz-contact, .work-project__content { min-width: 0; }
+  .cta__form input, .cta__form textarea, .quiz-contact input,
+  .quiz-messenger-contact input { font: inherit; font-size: 16px; max-width: 100%; }
+  .cta__form input, .quiz-contact input, .quiz-messenger-contact input {
+    scroll-margin-block: 90px;
+  }
+  .project-filter, .quiz-channel span { min-height: 44px; }
+  .quiz-channel span { display: flex; align-items: center; }
+  .lead-consent { padding-block: 8px; }
+  .work-project__thumbs { flex-wrap: wrap; }
+  .work-project__thumbs button { flex-shrink: 0; min-height: 44px; }
+  .contact-widget { right: max(16px, env(safe-area-inset-right, 0px)); }
+  .footer { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (max-width: 600px) {
+  .hero--fullbleed { min-height: 85svh; }
+  .hero--fullbleed .hero__content { padding-top: 112px; padding-bottom: 36px; }
+  .hero--fullbleed .hero__text h1 { font-size: clamp(24px, 6.5vw, 32px); }
+  .hero--fullbleed .hero__cta-outline {
+    max-width: calc(100% - 32px);
+    padding: 14px 18px;
+    height: auto;
+    text-align: center;
+    white-space: normal;
+  }
+  .hero__secondary { padding-block: 12px; }
+  .hero__stats-inner { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .hero__stats-sep { display: none; }
+  .materials-intro h1 { font-size: clamp(32px, 9vw, 54px); line-height: 1.08; letter-spacing: -.04em; }
+  .materials-intro__lead, .service-content p { font-size: 16px; line-height: 1.65; }
+  .service-page h1 { font-size: clamp(30px, 8vw, 44px); overflow-wrap: anywhere; }
+  .materials-group__head h2, .materials-cta h2 { overflow-wrap: anywhere; }
+  .quiz-form { padding: 24px 16px; }
+  .quiz-form__actions { gap: 10px; }
+  .quiz-form__actions button { min-width: 0; white-space: normal; }
+  .lead-consent span, .lead-success p { min-width: 0; overflow-wrap: anywhere; }
+  .photo-viewer {
+    padding: calc(64px + env(safe-area-inset-top, 0px))
+      max(12px, env(safe-area-inset-right, 0px))
+      calc(85px + env(safe-area-inset-bottom, 0px))
+      max(12px, env(safe-area-inset-left, 0px));
+  }
+  .photo-viewer__close { top: max(12px, env(safe-area-inset-top, 0px)); }
+  .photo-viewer__prev, .photo-viewer__next { bottom: calc(20px + env(safe-area-inset-bottom, 0px)); }
+  .photo-viewer figcaption { font-size: 13px; max-height: 5em; overflow-y: auto; }
+}
