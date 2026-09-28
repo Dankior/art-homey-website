@@ -1,5 +1,5 @@
 (() => {
-  const targets = [...document.querySelectorAll('.project-card .slider__slide img, .case-study__main-photo, .case-study__gallery > div, .work-project__main, .service__photo')];
+  const targets = [...document.querySelectorAll('.project-card .slider__slide img, .case-study__main-photo, .case-study__gallery > div, .work-project__main, .service__photo, .production-photos img')];
   if (!targets.length) return;
   const dialog = document.createElement('dialog');
   dialog.className = 'photo-viewer';
@@ -20,8 +20,8 @@
   function open(el) {
     trigger = el;
     const project = el.closest('[data-work-project]');
-    const group = el.closest('.project-card, .case-study__visual');
-    photos = project ? [...project.querySelectorAll('[data-project-image]')].map(b => ({src:b.dataset.projectImage, alt:b.getAttribute('aria-label')})) : group ? [...group.querySelectorAll('.slider__slide img, .case-study__main-photo, .case-study__gallery > div')].map(info) : [info(el)];
+    const group = el.closest('.project-card, .case-study__visual, .production-photos');
+    photos = project ? [...project.querySelectorAll('[data-project-image]')].map(b => ({src:b.dataset.projectImage, alt:b.getAttribute('aria-label')})) : group ? [...group.querySelectorAll('.slider__slide img, .case-study__main-photo, .case-study__gallery > div, .production-photos img')].map(info) : [info(el)];
     photos = photos.filter(p => p.src);
     if (!photos.length) return;
     const selected = source(el);
